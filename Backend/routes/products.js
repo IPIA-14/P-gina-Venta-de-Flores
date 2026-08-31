@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const fs = require('fs');
 const path = require('path');
+const fs = require('fs');
 const multer = require('multer');
 const { authenticate } = require('../middleware/authenticate');
+const { getDb } = require('../db/database');
 
-const PRODUCTS_FILE = path.join(__dirname, '../data/products.json');
-const UPLOADS_DIR   = path.join(__dirname, '../../Fronted/uploads');
+const UPLOADS_DIR = path.join(__dirname, '../../Fronted/uploads');
 
 // Asegurar que exista la carpeta de uploads
 if (!fs.existsSync(UPLOADS_DIR)) fs.mkdirSync(UPLOADS_DIR, { recursive: true });
@@ -27,99 +27,138 @@ const upload = multer({
   }
 });
 
-function readProducts() {
-  return JSON.parse(fs.readFileSync(PRODUCTS_FILE, 'utf-8'));
-}
-
-function writeProducts(data) {
-  fs.writeFileSync(PRODUCTS_FILE, JSON.stringify(data, null, 2));
-}
+// Parsear images de JSON string a Array de JS
+const formatProduct = (p) => {
+  return { ...p, images: p.images ? JSON.parse(p.images) : [] };
+};
 
 // GET /api/products — todos los productos
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
   try {
-    const products = readProducts();
-    res.json(products);
+    const db = await getDb();
+    const products = await db.all('SELECT * FROM products');
+    res.json(products.map(formatProduct));
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: 'Error leyendo productos' });
   }
 });
 
 // GET /api/products/:id — un producto por ID
-router.get('/:id', (req, res) => {
+router.get('/:id', async (req, res) => {
   try {
-    const products = readProducts();
-    const product = products.find(p => p.id === parseInt(req.params.id));
+    const db = await getDb();
+    const product = await db.get('SELECT * FROM products WHERE id = ?', [req.params.id]);
     if (!product) return res.status(404).json({ error: 'Producto no encontrado' });
-    res.json(product);
+    res.json(formatProduct(product));
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: 'Error leyendo producto' });
   }
 });
 
-// PUT /api/products/:id — actualizar producto (admin only)
-router.put('/:id', authenticate, (req, res) => {
-  if (req.user.role !== 'admin') {
-    return res.status(403).json({ error: 'Acceso denegado' });
-  }
+// POST /api/products — crear nuevo producto (admin only)
+router.post('/', authenticate, async (req, res) => {
+  if (req.user.role !== 'admin') return res.status(403).json({ error: 'Acceso denegado' });
   try {
-    const products = readProducts();
-    const idx = products.findIndex(p => p.id === parseInt(req.params.id));
-    if (idx === -1) return res.status(404).json({ error: 'Producto no encontrado' });
+    const db = await getDb();
+    const { name, desc, price, qty, presentation, category, icon } = req.body;
+    
+    if (!name || price === undefined) {
+      return res.status(400).json({ error: 'Nombre y precio son obligatorios' });
+    }
 
-    const { price, name, desc } = req.body;
-    if (price !== undefined) products[idx].price = Number(price);
-    if (name  !== undefined) products[idx].name  = name;
-    if (desc  !== undefined) products[idx].desc  = desc;
+    const result = await db.run(
+      `INSERT INTO products (name, desc, price, qty, presentation, category, icon, images) 
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+      [name, desc || '', Number(price), qty || '1', presentation || 'individual', category || 'eternas', icon || '🌹', '[]']
+    );
 
-    writeProducts(products);
-    res.json({ success: true, product: products[idx] });
+    const newProduct = await db.get('SELECT * FROM products WHERE id = ?', [result.lastID]);
+    res.status(201).json({ success: true, product: formatProduct(newProduct) });
   } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error creando producto' });
+  }
+});
+
+// PUT /api/products/:id — actualizar producto (admin only)
+router.put('/:id', authenticate, async (req, res) => {
+  if (req.user.role !== 'admin') return res.status(403).json({ error: 'Acceso denegado' });
+  try {
+    const db = await getDb();
+    const { price, name, desc, qty, presentation, category, icon } = req.body;
+    
+    // Obtener valores actuales
+    const current = await db.get('SELECT * FROM products WHERE id = ?', [req.params.id]);
+    if (!current) return res.status(404).json({ error: 'Producto no encontrado' });
+
+    const newPrice = price !== undefined ? Number(price) : current.price;
+    const newName = name !== undefined ? name : current.name;
+    const newDesc = desc !== undefined ? desc : current.desc;
+    const newQty = qty !== undefined ? qty : current.qty;
+    const newPresentation = presentation !== undefined ? presentation : current.presentation;
+    const newCategory = category !== undefined ? category : current.category;
+    const newIcon = icon !== undefined ? icon : current.icon;
+
+    await db.run(
+      'UPDATE products SET price = ?, name = ?, desc = ?, qty = ?, presentation = ?, category = ?, icon = ? WHERE id = ?',
+      [newPrice, newName, newDesc, newQty, newPresentation, newCategory, newIcon, req.params.id]
+    );
+    
+    const updated = await db.get('SELECT * FROM products WHERE id = ?', [req.params.id]);
+    res.json({ success: true, product: formatProduct(updated) });
+  } catch (err) {
+    console.error(err);
     res.status(500).json({ error: 'Error actualizando producto' });
   }
 });
 
 // POST /api/products/:id/images — subir imagen (admin only)
-router.post('/:id/images', authenticate, upload.single('image'), (req, res) => {
+router.post('/:id/images', authenticate, upload.single('image'), async (req, res) => {
   if (req.user.role !== 'admin') return res.status(403).json({ error: 'Acceso denegado' });
-  try {
-    const products = readProducts();
-    const idx = products.findIndex(p => p.id === parseInt(req.params.id));
-    if (idx === -1) return res.status(404).json({ error: 'Producto no encontrado' });
+  if (!req.file) return res.status(400).json({ error: 'No se envió imagen' });
 
-    if (!req.file) return res.status(400).json({ error: 'No se envió imagen' });
+  try {
+    const db = await getDb();
+    const product = await db.get('SELECT images FROM products WHERE id = ?', [req.params.id]);
+    if (!product) return res.status(404).json({ error: 'Producto no encontrado' });
 
     const imageUrl = `/uploads/${req.file.filename}`;
-    if (!products[idx].images) products[idx].images = [];
-    products[idx].images.push(imageUrl);
+    const images = product.images ? JSON.parse(product.images) : [];
+    images.push(imageUrl);
 
-    writeProducts(products);
-    res.json({ success: true, imageUrl, images: products[idx].images });
+    await db.run('UPDATE products SET images = ? WHERE id = ?', [JSON.stringify(images), req.params.id]);
+    res.json({ success: true, imageUrl, images });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: 'Error subiendo imagen' });
   }
 });
 
 // DELETE /api/products/:id/images — eliminar imagen (admin only)
-router.delete('/:id/images', authenticate, (req, res) => {
+router.delete('/:id/images', authenticate, async (req, res) => {
   if (req.user.role !== 'admin') return res.status(403).json({ error: 'Acceso denegado' });
-  try {
-    const { imageUrl } = req.body;
-    if (!imageUrl) return res.status(400).json({ error: 'imageUrl requerida' });
+  const { imageUrl } = req.body;
+  if (!imageUrl) return res.status(400).json({ error: 'imageUrl requerida' });
 
-    const products = readProducts();
-    const idx = products.findIndex(p => p.id === parseInt(req.params.id));
-    if (idx === -1) return res.status(404).json({ error: 'Producto no encontrado' });
+  try {
+    const db = await getDb();
+    const product = await db.get('SELECT images FROM products WHERE id = ?', [req.params.id]);
+    if (!product) return res.status(404).json({ error: 'Producto no encontrado' });
 
     // Eliminar archivo físico
     const filename = path.basename(imageUrl);
     const filePath = path.join(UPLOADS_DIR, filename);
     if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
 
-    products[idx].images = (products[idx].images || []).filter(u => u !== imageUrl);
-    writeProducts(products);
-    res.json({ success: true, images: products[idx].images });
+    let images = product.images ? JSON.parse(product.images) : [];
+    images = images.filter(u => u !== imageUrl);
+
+    await db.run('UPDATE products SET images = ? WHERE id = ?', [JSON.stringify(images), req.params.id]);
+    res.json({ success: true, images });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: 'Error eliminando imagen' });
   }
 });

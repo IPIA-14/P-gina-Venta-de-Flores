@@ -1,57 +1,53 @@
 const express = require('express');
 const router = express.Router();
-const fs = require('fs');
-const path = require('path');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const { getDb } = require('../db/database');
+const fs = require('fs');
+const path = require('path');
 
-const USERS_FILE = path.join(__dirname, '../data/users.json');
-
-function readUsers() {
-  return JSON.parse(fs.readFileSync(USERS_FILE, 'utf-8'));
+// Obtener la clave secreta desde .env (misma que server.js)
+const envPath = path.join(__dirname, '../.env');
+let JWT_SECRET = 'clave_secreta_fallback';
+if (fs.existsSync(envPath)) {
+  const envFile = fs.readFileSync(envPath, 'utf8');
+  const match = envFile.match(/JWT_SECRET=(.*)/);
+  if (match) JWT_SECRET = match[1].trim();
 }
 
-// POST /api/auth/login
 router.post('/login', async (req, res) => {
+  const { username, password } = req.body;
+  if (!username || !password) {
+    return res.status(400).json({ error: 'Faltan credenciales' });
+  }
+
   try {
-    const { username, password } = req.body;
-    if (!username || !password) {
-      return res.status(400).json({ error: 'Usuario y contraseña son requeridos' });
-    }
-
-    const users = readUsers();
-    const user = users.find(u => u.username === username);
-
+    const db = await getDb();
+    const user = await db.get('SELECT * FROM users WHERE username = ?', [username]);
+    
     if (!user) {
-      return res.status(401).json({ error: 'Credenciales inválidas' });
+      return res.status(401).json({ error: 'Usuario o contraseña incorrectos' });
     }
 
-    // Verificar contraseña
-    const isValid = await bcrypt.compare(password, user.passwordHash);
-    if (!isValid) {
-      return res.status(401).json({ error: 'Credenciales inválidas' });
+    const match = await bcrypt.compare(password, user.passwordHash);
+    if (!match) {
+      return res.status(401).json({ error: 'Usuario o contraseña incorrectos' });
     }
 
-    // Generar token JWT
     const token = jwt.sign(
       { id: user.id, username: user.username, role: user.role },
-      process.env.JWT_SECRET || 'supersecretkey',
+      JWT_SECRET,
       { expiresIn: '24h' }
     );
 
-    res.json({
-      success: true,
-      token,
-      user: {
-        id: user.id,
-        username: user.username,
-        role: user.role
-      }
+    res.json({ 
+      success: true, 
+      token, 
+      user: { username: user.username, role: user.role } 
     });
-
   } catch (error) {
-    console.error('Login error:', error);
-    res.status(500).json({ error: 'Error en el servidor durante el login' });
+    console.error('Error en /login:', error);
+    res.status(500).json({ error: 'Error del servidor' });
   }
 });
 

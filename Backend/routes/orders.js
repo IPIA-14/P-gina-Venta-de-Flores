@@ -1,64 +1,82 @@
 const express = require('express');
 const router = express.Router();
-const fs = require('fs');
-const path = require('path');
 const { authenticate } = require('../middleware/authenticate');
+const { getDb } = require('../db/database');
 
-const ORDERS_FILE = path.join(__dirname, '../data/orders.json');
+const formatOrder = (o) => {
+  return { ...o, items: o.items ? JSON.parse(o.items) : [] };
+};
 
-function readOrders() {
-  return JSON.parse(fs.readFileSync(ORDERS_FILE, 'utf-8'));
-}
-
-function writeOrders(data) {
-  fs.writeFileSync(ORDERS_FILE, JSON.stringify(data, null, 2));
-}
-
-// POST /api/orders — guardar un pedido
-router.post('/', (req, res) => {
+// POST /api/orders — crear un pedido
+router.post('/', async (req, res) => {
   try {
-    const orders = readOrders();
+    const { items, total, whatsappText } = req.body;
+    if (!items || !items.length) {
+      return res.status(400).json({ error: 'El pedido no tiene items' });
+    }
+
     const newOrder = {
       id: Date.now(),
       createdAt: new Date().toISOString(),
       status: 'pendiente',
-      ...req.body
+      items: JSON.stringify(items),
+      total: total,
+      message: whatsappText
     };
-    orders.push(newOrder);
-    writeOrders(orders);
-    res.status(201).json({ success: true, order: newOrder });
+
+    const db = await getDb();
+    await db.run(
+      'INSERT INTO orders (id, createdAt, status, items, total, message) VALUES (?, ?, ?, ?, ?, ?)',
+      [newOrder.id, newOrder.createdAt, newOrder.status, newOrder.items, newOrder.total, newOrder.message]
+    );
+
+    res.status(201).json({ success: true, orderId: newOrder.id });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: 'Error guardando pedido' });
   }
 });
 
-// GET /api/orders — listar todos los pedidos (admin)
-router.get('/', authenticate, (req, res) => {
+// GET /api/orders — obtener pedidos (admin only)
+router.get('/', authenticate, async (req, res) => {
   if (req.user.role !== 'admin') {
     return res.status(403).json({ error: 'Acceso denegado' });
   }
   try {
-    const orders = readOrders();
-    res.json(orders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
+    const db = await getDb();
+    const orders = await db.all('SELECT * FROM orders ORDER BY createdAt DESC');
+    res.json(orders.map(formatOrder));
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: 'Error leyendo pedidos' });
   }
 });
 
-// PATCH /api/orders/:id/status — actualizar estado de pedido
-router.patch('/:id/status', authenticate, (req, res) => {
+// PATCH /api/orders/:id/status — actualizar estado
+router.patch('/:id/status', authenticate, async (req, res) => {
   if (req.user.role !== 'admin') {
     return res.status(403).json({ error: 'Acceso denegado' });
   }
   try {
-    const orders = readOrders();
-    const idx = orders.findIndex(o => o.id === parseInt(req.params.id));
-    if (idx === -1) return res.status(404).json({ error: 'Pedido no encontrado' });
-    orders[idx].status = req.body.status || 'pendiente';
-    writeOrders(orders);
-    res.json({ success: true, order: orders[idx] });
+    const { status } = req.body;
+    if (!['pendiente', 'confirmado', 'entregado'].includes(status)) {
+      return res.status(400).json({ error: 'Estado inválido' });
+    }
+
+    const db = await getDb();
+    const result = await db.run(
+      'UPDATE orders SET status = ? WHERE id = ?',
+      [status, req.params.id]
+    );
+
+    if (result.changes === 0) {
+      return res.status(404).json({ error: 'Pedido no encontrado' });
+    }
+
+    res.json({ success: true, status });
   } catch (err) {
-    res.status(500).json({ error: 'Error actualizando pedido' });
+    console.error(err);
+    res.status(500).json({ error: 'Error actualizando estado' });
   }
 });
 

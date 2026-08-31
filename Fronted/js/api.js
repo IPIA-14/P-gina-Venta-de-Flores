@@ -46,6 +46,24 @@ async function fetchProductById(id) {
 }
 
 /**
+ * Crea un nuevo producto.
+ * @param {Object} data — { name, desc, price, qty, presentation, category, icon }
+ * @returns {Promise<Object>}
+ */
+async function createProduct(data) {
+  const res = await fetch(`${API_BASE}/products`, {
+    method: 'POST',
+    headers: { 
+      'Content-Type': 'application/json',
+      ...getAuthHeaders()
+    },
+    body: JSON.stringify(data)
+  });
+  if (!res.ok) throw new Error('Error creando producto');
+  return await res.json();
+}
+
+/**
  * Actualiza el precio (y opcionalmente nombre/desc) de un producto.
  * @param {number} id
  * @param {Object} data — { price, name?, desc? }

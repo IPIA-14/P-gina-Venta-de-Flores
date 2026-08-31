@@ -54,16 +54,42 @@ async function loadAdminProducts() {
   `).join('');
 }
 
-/* ── Modal de edición ───────────────────────────── */
+/* ── Modal de creación y edición ───────────────────────────── */
+function openCreateModal() {
+  document.getElementById('editModalTitle').textContent = '✨ Nuevo Producto';
+  document.getElementById('editProductId').value = '';
+  document.getElementById('editName').value = '';
+  document.getElementById('editDesc').value = '';
+  document.getElementById('editPrice').value = '';
+  document.getElementById('editQty').value = '1';
+  document.getElementById('editIcon').value = '🌹';
+  document.getElementById('editCategory').value = 'eternas';
+  document.getElementById('editPresentation').value = 'caja';
+  
+  // Ocultar campo de adjuntar imágenes en la creación inicial (se habilitará tras crear)
+  const imagesFieldGroup = document.getElementById('editImagesGrid').parentElement;
+  imagesFieldGroup.style.display = 'none';
+
+  document.getElementById('editModal').classList.add('open');
+}
+
 function openEditModal(id) {
   const p = allProductsCache.find(x => x.id === id);
   if (!p) return;
 
-  document.getElementById('editModalTitle').textContent = `${p.icon} ${p.name}`;
+  document.getElementById('editModalTitle').textContent = `${p.icon} Editar Producto`;
   document.getElementById('editProductId').value = id;
   document.getElementById('editName').value = p.name;
   document.getElementById('editDesc').value = p.desc || '';
   document.getElementById('editPrice').value = p.price;
+  document.getElementById('editQty').value = p.qty || '1';
+  document.getElementById('editIcon').value = p.icon || '🌹';
+  document.getElementById('editCategory').value = p.category || 'eternas';
+  document.getElementById('editPresentation').value = p.presentation || 'caja';
+
+  // Mostrar el campo de imágenes en modo edición
+  const imagesFieldGroup = document.getElementById('editImagesGrid').parentElement;
+  imagesFieldGroup.style.display = 'block';
 
   renderImagesGrid(p.images || []);
 
@@ -171,14 +197,21 @@ function handleOverlayClick(e) {
 }
 
 async function submitEditProduct() {
-  const id = Number(document.getElementById('editProductId').value);
+  const idStr = document.getElementById('editProductId').value;
+  const isCreating = !idStr; // Si no hay ID, estamos creando
+
   const name = document.getElementById('editName').value.trim();
   const desc = document.getElementById('editDesc').value.trim();
   const price = Number(document.getElementById('editPrice').value);
+  const qty = document.getElementById('editQty').value.trim();
+  const icon = document.getElementById('editIcon').value.trim();
+  const category = document.getElementById('editCategory').value;
+  const presentation = document.getElementById('editPresentation').value;
+
   const saveBtn = document.getElementById('editSaveBtn');
 
-  if (!name || isNaN(price) || price < 0) {
-    alert('Nombre o precio inválidos');
+  if (!name || isNaN(price) || price < 0 || !qty || !icon) {
+    alert('Por favor completa todos los campos requeridos correctamente.');
     return;
   }
 
@@ -186,29 +219,16 @@ async function submitEditProduct() {
   saveBtn.disabled = true;
 
   try {
-    const token = localStorage.getItem('token');
-    const response = await fetch(`/api/products/${id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        ...(token ? { 'Authorization': `Bearer ${token}` } : {})
-      },
-      body: JSON.stringify({ name, desc, price })
-    });
+    const data = { name, desc, price, qty, icon, category, presentation };
 
-    if (!response.ok) throw new Error('Error en servidor');
-
-    // Actualizar caché local
-    const idx = allProductsCache.findIndex(x => x.id === id);
-    if (idx !== -1) allProductsCache[idx] = { ...allProductsCache[idx], name, desc, price };
-
-    // Actualizar tarjeta en UI sin recargar todo
-    const card = document.getElementById(`card-${id}`);
-    if (card) {
-      card.querySelector('.apc-name').textContent = name;
-      card.querySelector('.apc-desc').textContent = desc || 'Sin descripción';
-      card.querySelector('.apc-price').textContent = `$${money(price)}`;
+    if (isCreating) {
+      await createProduct(data);
+    } else {
+      await updateProduct(Number(idStr), data);
     }
+
+    // Refrescar toda la lista para reflejar los cambios de forma sencilla
+    await loadAdminProducts();
 
     saveBtn.textContent = '✓ Guardado';
     setTimeout(() => {

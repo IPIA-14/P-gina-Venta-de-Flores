@@ -26,7 +26,10 @@
 
   <!-- Columna 1: Productos -->
   <div>
-    <h2 class="admin-section-title">🌹 Gestión de Productos</h2>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <h2 class="admin-section-title" style="margin-bottom:0">🌹 Gestión de Productos</h2>
+      <button class="btn btn-primary btn-sm" onclick="openCreateModal()">+ Nuevo Producto</button>
+    </div>
     <p style="font-size:13px;color:var(--muted);margin-bottom:20px">
       Edita los precios y guarda cada uno individualmente. Los cambios se guardan en el servidor.
     </p>
@@ -63,17 +66,49 @@
     </div>
     <div class="edit-modal-body">
       <input type="hidden" id="editProductId">
-      <div class="edit-field-group">
-        <label class="edit-label">NOMBRE DEL PRODUCTO</label>
-        <input class="admin-input" id="editName" type="text" placeholder="Nombre del arreglo">
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+        <div class="edit-field-group">
+          <label class="edit-label">NOMBRE DEL PRODUCTO</label>
+          <input class="admin-input" id="editName" type="text" placeholder="Nombre del arreglo">
+        </div>
+        <div class="edit-field-group">
+          <label class="edit-label">PRECIO (COP)</label>
+          <input class="admin-input" id="editPrice" type="number" min="0" step="1000" placeholder="Ej: 85000">
+        </div>
+      </div>
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+        <div class="edit-field-group">
+          <label class="edit-label">CATEGORÍA</label>
+          <select class="admin-input" id="editCategory">
+            <option value="eternas">Rosas Eternas</option>
+            <option value="cajas">Cajas de Rosas</option>
+            <option value="detalles">Detalles Especiales</option>
+            <option value="premium">Premium</option>
+          </select>
+        </div>
+        <div class="edit-field-group">
+          <label class="edit-label">PRESENTACIÓN</label>
+          <select class="admin-input" id="editPresentation">
+            <option value="individual">Individual</option>
+            <option value="cupula">Cúpula</option>
+            <option value="ramo">Ramo</option>
+            <option value="caja">Caja</option>
+          </select>
+        </div>
+      </div>
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+        <div class="edit-field-group">
+          <label class="edit-label">CANTIDAD DE ROSAS</label>
+          <input class="admin-input" id="editQty" type="text" placeholder="Ej: 1, 3, 12, 50+">
+        </div>
+        <div class="edit-field-group">
+          <label class="edit-label">ICONO (EMOJI)</label>
+          <input class="admin-input" id="editIcon" type="text" placeholder="Ej: 🌹">
+        </div>
       </div>
       <div class="edit-field-group">
         <label class="edit-label">DESCRIPCIÓN</label>
-        <textarea class="admin-input" id="editDesc" rows="3" placeholder="Describe el arreglo floral..."></textarea>
-      </div>
-      <div class="edit-field-group">
-        <label class="edit-label">PRECIO (COP)</label>
-        <input class="admin-input" id="editPrice" type="number" min="0" step="1000" placeholder="Ej: 85000">
+        <textarea class="admin-input" id="editDesc" rows="2" placeholder="Describe el arreglo floral..."></textarea>
       </div>
       <div class="edit-field-group">
         <label class="edit-label">ADJUNTAR IMÁGENES</label>
