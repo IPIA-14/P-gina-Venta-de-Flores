@@ -51,6 +51,45 @@
 
 </div>
 
+<!-- ── Modal Editar Producto ────────────────────── -->
+<div id="editModal" class="edit-modal-overlay" onclick="handleOverlayClick(event)">
+  <div class="edit-modal">
+    <div class="edit-modal-header">
+      <h3 id="editModalTitle">Editar Producto</h3>
+      <button class="edit-modal-close" onclick="closeEditModal()">✕</button>
+    </div>
+    <div class="edit-modal-tabs">
+      <span class="edit-tab active">✏️ Modo Edición</span>
+    </div>
+    <div class="edit-modal-body">
+      <input type="hidden" id="editProductId">
+      <div class="edit-field-group">
+        <label class="edit-label">NOMBRE DEL PRODUCTO</label>
+        <input class="admin-input" id="editName" type="text" placeholder="Nombre del arreglo">
+      </div>
+      <div class="edit-field-group">
+        <label class="edit-label">DESCRIPCIÓN</label>
+        <textarea class="admin-input" id="editDesc" rows="3" placeholder="Describe el arreglo floral..."></textarea>
+      </div>
+      <div class="edit-field-group">
+        <label class="edit-label">PRECIO (COP)</label>
+        <input class="admin-input" id="editPrice" type="number" min="0" step="1000" placeholder="Ej: 85000">
+      </div>
+      <div class="edit-field-group">
+        <label class="edit-label">ADJUNTAR IMÁGENES</label>
+        <div id="editImagesGrid" class="img-upload-grid">
+          <!-- miniaturas + botón se renderizan por JS -->
+        </div>
+        <input type="file" id="imageFileInput" accept="image/*" style="display:none" onchange="handleImageUpload(this)">
+      </div>
+    </div>
+    <div class="edit-modal-footer">
+      <button class="btn btn-ghost" onclick="closeEditModal()">Cancelar</button>
+      <button class="save-btn" id="editSaveBtn" onclick="submitEditProduct()">Guardar cambios</button>
+    </div>
+  </div>
+</div>
+
 <!-- ── Footer Admin ──────────────────────────────── -->
 <footer style="background:var(--dark-2);color:var(--white);text-align:center;padding:20px;font-size:13px;color:#6b5565">
   Panel Admin — Rosas Eternas &amp; Detalles

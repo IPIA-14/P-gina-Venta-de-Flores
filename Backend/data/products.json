@@ -7,14 +7,17 @@
     "price": 35000,
     "icon": "🌹",
     "desc": "Rosa eterna en presentación individual, perfecta para regalar",
-    "category": "eternas"
+    "category": "eternas",
+    "images": [
+      "/uploads/product-1-1788207340388.jfif"
+    ]
   },
   {
     "id": 2,
-    "name": "Rosa eterna en cúpula",
+    "name": "Rosa eterna en cúpula jcvwno",
     "qty": "1",
     "presentation": "cupula",
-    "price": 60000,
+    "price": 60002,
     "icon": "🌹",
     "desc": "Rosa eterna protegida bajo una elegante cúpula de cristal",
     "category": "detalles"
