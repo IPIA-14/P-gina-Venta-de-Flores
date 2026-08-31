@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
@@ -17,9 +18,11 @@ app.use(express.static(path.join(__dirname, '../Fronted')));
 // ── Rutas API ───────────────────────────────────────────────
 const productsRouter = require('./routes/products');
 const ordersRouter = require('./routes/orders');
+const authRouter = require('./routes/auth');
 
 app.use('/api/products', productsRouter);
 app.use('/api/orders', ordersRouter);
+app.use('/api/auth', authRouter);
 
 // ── Health check ─────────────────────────────────────────────
 app.get('/api/health', (req, res) => {

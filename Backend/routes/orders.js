@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const fs = require('fs');
 const path = require('path');
+const { authenticate } = require('../middleware/authenticate');
 
 const ORDERS_FILE = path.join(__dirname, '../data/orders.json');
 
@@ -32,7 +33,10 @@ router.post('/', (req, res) => {
 });
 
 // GET /api/orders — listar todos los pedidos (admin)
-router.get('/', (req, res) => {
+router.get('/', authenticate, (req, res) => {
+  if (req.user.role !== 'admin') {
+    return res.status(403).json({ error: 'Acceso denegado' });
+  }
   try {
     const orders = readOrders();
     res.json(orders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
@@ -42,7 +46,10 @@ router.get('/', (req, res) => {
 });
 
 // PATCH /api/orders/:id/status — actualizar estado de pedido
-router.patch('/:id/status', (req, res) => {
+router.patch('/:id/status', authenticate, (req, res) => {
+  if (req.user.role !== 'admin') {
+    return res.status(403).json({ error: 'Acceso denegado' });
+  }
   try {
     const orders = readOrders();
     const idx = orders.findIndex(o => o.id === parseInt(req.params.id));

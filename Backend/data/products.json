@@ -1,21 +1,192 @@
 [
-  {"id":1,"name":"Rosa eterna individual","qty":"1","presentation":"individual","price":35000,"icon":"🌹","desc":"Rosa eterna en presentación individual, perfecta para regalar"},
-  {"id":2,"name":"Rosa eterna en cúpula","qty":"1","presentation":"cupula","price":60000,"icon":"🌹","desc":"Rosa eterna protegida bajo una elegante cúpula de cristal"},
-  {"id":3,"name":"Rosa eterna en ramo","qty":"1","presentation":"ramo","price":45000,"icon":"🌹","desc":"Rosa eterna decorada en ramo con lazo de cinta"},
-  {"id":4,"name":"Rosa eterna en caja mini","qty":"1","presentation":"caja","price":50000,"icon":"🌹","desc":"Caja mini elegante, ideal para sorpresas pequeñas"},
-  {"id":5,"name":"Rosa eterna con luces","qty":"1","presentation":"cupula","price":70000,"icon":"✨","desc":"Cúpula con iluminación LED que realza la belleza de la rosa"},
-  {"id":6,"name":"Rosa eterna arcoíris","qty":"1","presentation":"cupula","price":75000,"icon":"🌈","desc":"Rosa eterna multicolor única, cada una es irrepetible"},
-  {"id":7,"name":"3 Rosas en caja negra","qty":"3","presentation":"caja","price":90000,"icon":"🌹","desc":"Caja negra elegante con 3 rosas eternas"},
-  {"id":8,"name":"3 Rosas en caja blanca","qty":"3","presentation":"caja","price":95000,"icon":"🌹","desc":"Caja blanca romántica con 3 rosas eternas"},
-  {"id":9,"name":"3 Rosas en cúpula","qty":"3","presentation":"cupula","price":110000,"icon":"🌹","desc":"Cúpula grande con 3 rosas eternas en su interior"},
-  {"id":10,"name":"3 Rosas en caja corazón","qty":"3","presentation":"caja","price":100000,"icon":"❤️","desc":"Caja con forma de corazón, perfecta para San Valentín"},
-  {"id":11,"name":"3 Rosas premium","qty":"3","presentation":"caja","price":120000,"icon":"💎","desc":"Presentación premium con acabados de lujo"},
-  {"id":12,"name":"3 Rosas elegantes","qty":"3","presentation":"caja","price":115000,"icon":"🌹","desc":"Caja elegante personalizada con 3 rosas eternas"},
-  {"id":13,"name":"6 Rosas en caja premium","qty":"6","presentation":"caja","price":170000,"icon":"🌹","desc":"Caja premium con 6 rosas eternas seleccionadas"},
-  {"id":14,"name":"6 Rosas en cúpula","qty":"6","presentation":"cupula","price":190000,"icon":"✨","desc":"Gran cúpula con 6 rosas eternas iluminadas"},
-  {"id":15,"name":"12 Rosas eternas clásica","qty":"12","presentation":"caja","price":280000,"icon":"🌹","desc":"Caja clásica con 12 rosas eternas, el regalo perfecto"},
-  {"id":16,"name":"12 Rosas eternas premium","qty":"12","presentation":"caja","price":350000,"icon":"💎","desc":"Presentación premium con 12 rosas eternas y acabados de lujo"},
-  {"id":17,"name":"24 Rosas eternas","qty":"24","presentation":"caja","price":550000,"icon":"🌹","desc":"Gran caja de 24 rosas eternas para momentos especiales"},
-  {"id":18,"name":"36 Rosas eternas","qty":"36","presentation":"caja","price":780000,"icon":"🌹","desc":"Caja especial de 36 rosas eternas, un regalo imponente"},
-  {"id":19,"name":"50+ Rosas eternas","qty":"50+","presentation":"caja","price":1000000,"icon":"🌹","desc":"Pedido personalizado de 50 o más rosas eternas"}
+  {
+    "id": 1,
+    "name": "Rosa eterna individual",
+    "qty": "1",
+    "presentation": "individual",
+    "price": 35000,
+    "icon": "🌹",
+    "desc": "Rosa eterna en presentación individual, perfecta para regalar",
+    "category": "eternas"
+  },
+  {
+    "id": 2,
+    "name": "Rosa eterna en cúpula",
+    "qty": "1",
+    "presentation": "cupula",
+    "price": 60000,
+    "icon": "🌹",
+    "desc": "Rosa eterna protegida bajo una elegante cúpula de cristal",
+    "category": "detalles"
+  },
+  {
+    "id": 3,
+    "name": "Rosa eterna en ramo",
+    "qty": "1",
+    "presentation": "ramo",
+    "price": 45000,
+    "icon": "🌹",
+    "desc": "Rosa eterna decorada en ramo con lazo de cinta",
+    "category": "eternas"
+  },
+  {
+    "id": 4,
+    "name": "Rosa eterna en caja mini",
+    "qty": "1",
+    "presentation": "caja",
+    "price": 50000,
+    "icon": "🌹",
+    "desc": "Caja mini elegante, ideal para sorpresas pequeñas",
+    "category": "cajas"
+  },
+  {
+    "id": 5,
+    "name": "Rosa eterna con luces",
+    "qty": "1",
+    "presentation": "cupula",
+    "price": 70000,
+    "icon": "✨",
+    "desc": "Cúpula con iluminación LED que realza la belleza de la rosa",
+    "category": "detalles"
+  },
+  {
+    "id": 6,
+    "name": "Rosa eterna arcoíris",
+    "qty": "1",
+    "presentation": "cupula",
+    "price": 75000,
+    "icon": "🌈",
+    "desc": "Rosa eterna multicolor única, cada una es irrepetible",
+    "category": "detalles"
+  },
+  {
+    "id": 7,
+    "name": "3 Rosas en caja negra",
+    "qty": "3",
+    "presentation": "caja",
+    "price": 90000,
+    "icon": "🌹",
+    "desc": "Caja negra elegante con 3 rosas eternas",
+    "category": "cajas"
+  },
+  {
+    "id": 8,
+    "name": "3 Rosas en caja blanca",
+    "qty": "3",
+    "presentation": "caja",
+    "price": 95000,
+    "icon": "🌹",
+    "desc": "Caja blanca romántica con 3 rosas eternas",
+    "category": "cajas"
+  },
+  {
+    "id": 9,
+    "name": "3 Rosas en cúpula",
+    "qty": "3",
+    "presentation": "cupula",
+    "price": 110000,
+    "icon": "🌹",
+    "desc": "Cúpula grande con 3 rosas eternas en su interior",
+    "category": "detalles"
+  },
+  {
+    "id": 10,
+    "name": "3 Rosas en caja corazón",
+    "qty": "3",
+    "presentation": "caja",
+    "price": 100000,
+    "icon": "❤️",
+    "desc": "Caja con forma de corazón, perfecta para San Valentín",
+    "category": "cajas"
+  },
+  {
+    "id": 11,
+    "name": "3 Rosas premium",
+    "qty": "3",
+    "presentation": "caja",
+    "price": 120000,
+    "icon": "💎",
+    "desc": "Presentación premium con acabados de lujo",
+    "category": "premium"
+  },
+  {
+    "id": 12,
+    "name": "3 Rosas elegantes",
+    "qty": "3",
+    "presentation": "caja",
+    "price": 115000,
+    "icon": "🌹",
+    "desc": "Caja elegante personalizada con 3 rosas eternas",
+    "category": "cajas"
+  },
+  {
+    "id": 13,
+    "name": "6 Rosas en caja premium",
+    "qty": "6",
+    "presentation": "caja",
+    "price": 170000,
+    "icon": "🌹",
+    "desc": "Caja premium con 6 rosas eternas seleccionadas",
+    "category": "premium"
+  },
+  {
+    "id": 14,
+    "name": "6 Rosas en cúpula",
+    "qty": "6",
+    "presentation": "cupula",
+    "price": 190000,
+    "icon": "✨",
+    "desc": "Gran cúpula con 6 rosas eternas iluminadas",
+    "category": "detalles"
+  },
+  {
+    "id": 15,
+    "name": "12 Rosas eternas clásica",
+    "qty": "12",
+    "presentation": "caja",
+    "price": 280000,
+    "icon": "🌹",
+    "desc": "Caja clásica con 12 rosas eternas, el regalo perfecto",
+    "category": "cajas"
+  },
+  {
+    "id": 16,
+    "name": "12 Rosas eternas premium",
+    "qty": "12",
+    "presentation": "caja",
+    "price": 350000,
+    "icon": "💎",
+    "desc": "Presentación premium con 12 rosas eternas y acabados de lujo",
+    "category": "premium"
+  },
+  {
+    "id": 17,
+    "name": "24 Rosas eternas",
+    "qty": "24",
+    "presentation": "caja",
+    "price": 550000,
+    "icon": "🌹",
+    "desc": "Gran caja de 24 rosas eternas para momentos especiales",
+    "category": "cajas"
+  },
+  {
+    "id": 18,
+    "name": "36 Rosas eternas",
+    "qty": "36",
+    "presentation": "caja",
+    "price": 780000,
+    "icon": "🌹",
+    "desc": "Caja especial de 36 rosas eternas, un regalo imponente",
+    "category": "cajas"
+  },
+  {
+    "id": 19,
+    "name": "50+ Rosas eternas",
+    "qty": "50+",
+    "presentation": "caja",
+    "price": 1000000,
+    "icon": "🌹",
+    "desc": "Pedido personalizado de 50 o más rosas eternas",
+    "category": "cajas"
+  }
 ]

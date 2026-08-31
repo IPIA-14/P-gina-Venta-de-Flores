@@ -1,278 +1,324 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Catálogo — Rosas Eternas</title>
-  <meta name="description" content="Elige entre nuestros 19 modelos de rosas eternas. Personaliza color, presentación, caja y extras para el regalo perfecto.">
+  <meta name="description"
+    content="Elige entre nuestros 19 modelos de rosas eternas. Personaliza color, presentación, caja y extras para el regalo perfecto.">
 
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/components.css">
   <link rel="stylesheet" href="css/pages.css">
 </head>
+
 <body>
 
-<!-- ── Top Bar ──────────────────────────────────── -->
-<div class="top-bar">
-  <span>🚚 Envíos el mismo día en tu ciudad 💗</span>
-  <a href="https://wa.me/573001234567" target="_blank">📱 WhatsApp: +57 300 123 4567</a>
-</div>
-
-<!-- ── Navegación ────────────────────────────────── -->
-<nav id="mainNav">
-  <a href="index.html" class="logo">
-    <span class="logo-main">Detalles que enamoran</span>
-    <span class="logo-sub">Rosas Eternas &amp; Detalles</span>
-  </a>
-  <div class="nav-links">
-    <a href="index.html">Inicio</a>
-    <a href="catalogo.html" class="active">Catálogo</a>
-    <a href="index.html#contacto">Contacto</a>
+  <!-- ── Top Bar ──────────────────────────────────── -->
+  <div class="top-bar">
+    <span>🚚 Envíos el mismo día en tu ciudad 💗</span>
+    <a href="https://wa.me/573001234567" target="_blank">📱 WhatsApp: +57 300 123 4567</a>
   </div>
-  <a href="catalogo.html" class="btn btn-primary btn-sm">Ver catálogo</a>
-</nav>
 
-<!-- ── Catálogo ──────────────────────────────────── -->
-<section class="catalog-section" id="catalogo">
-
-  <!-- Encabezado -->
-  <div class="catalog-head">
-    <div>
-      <div class="eyebrow">Nuestro catálogo</div>
-      <h1 class="title-serif">Rosas eternas 🌹</h1>
-      <p class="subtitle">Elige la cantidad, presentación y estilo que más te guste.</p>
+  <!-- ── Navegación ────────────────────────────────── -->
+  <nav id="mainNav">
+    <a href="index.html" class="logo">
+      <span class="logo-main">Detalles que enamoran</span>
+      <span class="logo-sub">Rosas Eternas &amp; Detalles</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html">Inicio</a>
+      <a href="catalogo.html" class="active">Catálogo</a>
+      <a href="index.html#contacto">Contacto</a>
+      <a href="login.html" id="loginNavLink">Iniciar sesión</a>
+      <a href="#" id="logoutNavLink" onclick="logout()" style="display:none">Cerrar sesión</a>
     </div>
-    <a href="admin.html" class="btn btn-outline btn-sm" title="Panel de administración">⚙️ Admin</a>
-  </div>
+    <a href="catalogo.html" class="btn btn-primary btn-sm">Ver catálogo</a>
+  </nav>
 
-  <!-- Tabs de cantidad -->
-  <div class="tab-filters" id="tabFilters">
-    <button class="tab active" data-qty="all" onclick="filterProducts('all', this)">🌹 Todas</button>
-    <button class="tab" data-qty="1"   onclick="filterProducts('1', this)">1 Rosa</button>
-    <button class="tab" data-qty="3"   onclick="filterProducts('3', this)">3 Rosas</button>
-    <button class="tab" data-qty="6"   onclick="filterProducts('6', this)">6 Rosas</button>
-    <button class="tab" data-qty="12"  onclick="filterProducts('12', this)">12 Rosas</button>
-    <button class="tab" data-qty="24"  onclick="filterProducts('24', this)">24 Rosas</button>
-    <button class="tab" data-qty="36"  onclick="filterProducts('36', this)">36 Rosas</button>
-    <button class="tab" data-qty="50+" onclick="filterProducts('50+', this)">50+ Rosas</button>
-  </div>
+  <!-- ── Catálogo ──────────────────────────────────── -->
+  <section class="catalog-section" id="catalogo">
 
-  <!-- Layout sidebar + grid -->
-  <div class="catalog-layout">
-
-    <!-- Sidebar Filtros -->
-    <aside class="sidebar-filters">
-      <h3>Filtrar por</h3>
-
-      <span class="filter-label">Cantidad</span>
-      <button class="filter-btn" data-qty="1"   onclick="filterProducts('1', null)">1 Rosa</button>
-      <button class="filter-btn" data-qty="3"   onclick="filterProducts('3', null)">3 Rosas</button>
-      <button class="filter-btn" data-qty="6"   onclick="filterProducts('6', null)">6 Rosas</button>
-      <button class="filter-btn" data-qty="12"  onclick="filterProducts('12', null)">12 Rosas</button>
-      <button class="filter-btn" data-qty="24"  onclick="filterProducts('24', null)">24 Rosas</button>
-      <button class="filter-btn" data-qty="36"  onclick="filterProducts('36', null)">36 Rosas</button>
-
-      <hr class="filter-divider">
-
-      <span class="filter-label">Presentación</span>
-      <button class="filter-btn" data-pres="caja"       onclick="filterPresentation('caja', this)">📦 En caja</button>
-      <button class="filter-btn" data-pres="cupula"     onclick="filterPresentation('cupula', this)">✨ En cúpula</button>
-      <button class="filter-btn" data-pres="ramo"       onclick="filterPresentation('ramo', this)">💐 En ramo</button>
-      <button class="filter-btn" data-pres="individual" onclick="filterPresentation('individual', this)">🌹 Individual</button>
-
-      <hr class="filter-divider">
-
-      <span class="filter-label">Color de rosa</span>
-      <div class="color-dots">
-        <div class="color-dot" title="Rojo"       style="background:#d71920"></div>
-        <div class="color-dot" title="Rosado"     style="background:#f19ab4"></div>
-        <div class="color-dot" title="Blanco"     style="background:#f5f5f5;border-color:#ccc"></div>
-        <div class="color-dot" title="Negro"      style="background:#1a1218"></div>
-        <div class="color-dot" title="Azul"       style="background:#2865cf"></div>
-        <div class="color-dot" title="Arcoíris"   style="background:linear-gradient(45deg,#f44,#7cf,#fd4)"></div>
+    <!-- Encabezado -->
+    <div class="catalog-head">
+      <div>
+        <div class="eyebrow">Nuestro catálogo</div>
+        <h1 class="title-serif">Rosas eternas 🌹</h1>
+        <p class="subtitle">Elige la cantidad, presentación y estilo que más te guste.</p>
       </div>
-
-      <hr class="filter-divider">
-
-      <button class="filter-btn" style="color:var(--pink);font-weight:600" onclick="filterProducts('all', null); filterPresentation(null, null)">
-        ✕ Limpiar filtros
-      </button>
-    </aside>
-
-    <!-- Grid de productos -->
-    <main>
-      <div class="results-bar">
-        <div class="results-count">Mostrando <span id="resultText">...</span> productos</div>
-        <select class="sort-select" id="sortSelect" onchange="sortProducts()">
-          <option value="popular">Más populares</option>
-          <option value="low">Precio: menor a mayor</option>
-          <option value="high">Precio: mayor a menor</option>
-          <option value="name">Nombre A-Z</option>
-        </select>
-      </div>
-      <div id="productGrid" class="products-grid"></div>
-    </main>
-  </div>
-</section>
-
-<!-- ── Carrito flotante ───────────────────────────── -->
-<div class="cart-float" id="cartFloat" onclick="toggleCart()">
-  🛒 Carrito
-  <span class="cart-count" id="cartCount">0</span>
-</div>
-
-<!-- ── Cart Drawer ───────────────────────────────── -->
-<div class="cart-drawer" id="cartDrawer">
-  <div class="cart-header">
-    <h3>🛒 Tu carrito</h3>
-    <button class="cart-close" onclick="closeCartDrawer()">✕</button>
-  </div>
-  <div class="cart-items" id="cartItems"></div>
-  <div class="cart-footer">
-    <div class="cart-total">
-      <span>Total</span>
-      <span class="cart-total-amount">$<span id="cartTotal">0</span></span>
-    </div>
-    <button class="btn btn-primary btn-full" onclick="sendWhatsApp()">
-      📲 Pedir por WhatsApp
-    </button>
-  </div>
-</div>
-
-<!-- ── Modal de producto ─────────────────────────── -->
-<div id="productModal" class="product-modal">
-  <div class="modal-card">
-
-    <!-- Visual -->
-    <div class="modal-visual">
-      <span id="modalVisualIcon">🌹</span>
+      <a href="admin.html" id="adminBtnTop" class="btn btn-outline btn-sm" title="Panel de administración"
+        style="display:none">⚙️ Admin</a>
     </div>
 
-    <!-- Contenido -->
-    <div class="modal-content">
-      <button class="modal-close" onclick="closeProduct()">✕</button>
-      <div class="eyebrow">Personaliza tu detalle</div>
-      <h2 class="modal-name" id="modalName">Rosa eterna</h2>
-      <div class="modal-price">
-        $<span id="modalTotalPrice">0</span>
-        <small style="font-size:13px;font-weight:400;color:var(--muted)" id="modalBasePrice"></small>
-      </div>
+    <!-- Tabs de cantidad -->
+    <div class="tab-filters" id="tabFilters">
+      <button class="tab active" data-qty="all" onclick="filterProducts('all', this)">🌹 Todas</button>
+      <button class="tab" data-qty="1" onclick="filterProducts('1', this)">1 Rosa</button>
+      <button class="tab" data-qty="3" onclick="filterProducts('3', this)">3 Rosas</button>
+      <button class="tab" data-qty="6" onclick="filterProducts('6', this)">6 Rosas</button>
+      <button class="tab" data-qty="12" onclick="filterProducts('12', this)">12 Rosas</button>
+      <button class="tab" data-qty="24" onclick="filterProducts('24', this)">24 Rosas</button>
+      <button class="tab" data-qty="36" onclick="filterProducts('36', this)">36 Rosas</button>
+      <button class="tab" data-qty="50+" onclick="filterProducts('50+', this)">50+ Rosas</button>
+    </div>
 
-      <!-- Color de la rosa -->
-      <div class="option-group">
-        <div class="option-title">🌹 Color de la rosa</div>
-        <div class="choices" id="roseColors">
-          <button class="choice selected" onclick="choose(this,'roseColor','Rojo')">🔴 Rojo</button>
-          <button class="choice" onclick="choose(this,'roseColor','Rosado')">🩷 Rosado</button>
-          <button class="choice" onclick="choose(this,'roseColor','Blanco')">⚪ Blanco</button>
-          <button class="choice" onclick="choose(this,'roseColor','Azul')">🔵 Azul</button>
-          <button class="choice" onclick="choose(this,'roseColor','Arcoíris')">🌈 Arcoíris</button>
+    <!-- Layout sidebar + grid -->
+    <div class="catalog-layout">
+
+      <!-- Sidebar Filtros -->
+      <aside class="sidebar-filters">
+        <h3>Filtrar por</h3>
+
+        <span class="filter-label">Colección</span>
+        <button class="filter-btn" data-cat="eternas" onclick="filterCategory('eternas', this)">🌹 Rosas
+          eternas</button>
+        <button class="filter-btn" data-cat="cajas" onclick="filterCategory('cajas', this)">🌹 Cajas de rosas</button>
+        <button class="filter-btn" data-cat="premium" onclick="filterCategory('premium', this)">💎 Rosas
+          premium</button>
+        <button class="filter-btn" data-cat="detalles" onclick="filterCategory('detalles', this)">🎁 Rosas con
+          detalles</button>
+
+        <hr class="filter-divider">
+
+        <span class="filter-label">Cantidad</span>
+        <button class="filter-btn" data-qty="1" onclick="filterProducts('1', null)">1 Rosa</button>
+        <button class="filter-btn" data-qty="3" onclick="filterProducts('3', null)">3 Rosas</button>
+        <button class="filter-btn" data-qty="6" onclick="filterProducts('6', null)">6 Rosas</button>
+        <button class="filter-btn" data-qty="12" onclick="filterProducts('12', null)">12 Rosas</button>
+        <button class="filter-btn" data-qty="24" onclick="filterProducts('24', null)">24 Rosas</button>
+        <button class="filter-btn" data-qty="36" onclick="filterProducts('36', null)">36 Rosas</button>
+
+        <hr class="filter-divider">
+
+        <span class="filter-label">Presentación</span>
+        <button class="filter-btn" data-pres="caja" onclick="filterPresentation('caja', this)">📦 En caja</button>
+        <button class="filter-btn" data-pres="cupula" onclick="filterPresentation('cupula', this)">✨ En cúpula</button>
+        <button class="filter-btn" data-pres="ramo" onclick="filterPresentation('ramo', this)">💐 En ramo</button>
+        <button class="filter-btn" data-pres="individual" onclick="filterPresentation('individual', this)">🌹
+          Individual</button>
+
+        <hr class="filter-divider">
+
+        <span class="filter-label">Color de rosa</span>
+        <div class="color-dots">
+          <div class="color-dot" title="Rojo" style="background:#d71920" onclick="filterColor('Rojo', this)"></div>
+          <div class="color-dot" title="Rosado" style="background:#f19ab4" onclick="filterColor('Rosado', this)"></div>
+          <div class="color-dot" title="Blanco" style="background:#f5f5f5;border-color:#ccc"
+            onclick="filterColor('Blanco', this)"></div>
+          <div class="color-dot" title="Negro" style="background:#1a1218" onclick="filterColor('Negro', this)"></div>
+          <div class="color-dot" title="Azul" style="background:#2865cf" onclick="filterColor('Azul', this)"></div>
+          <div class="color-dot" title="Arcoíris" style="background:linear-gradient(45deg,#f44,#7cf,#fd4)"
+            onclick="filterColor('Arcoíris', this)"></div>
         </div>
-      </div>
 
-      <!-- Presentación -->
-      <div class="option-group">
-        <div class="option-title">📦 Presentación</div>
-        <div class="choices" id="presentations">
-          <button class="choice selected" onclick="choose(this,'presentation','Caja')">📦 Caja</button>
-          <button class="choice" onclick="choose(this,'presentation','Cúpula')">✨ Cúpula</button>
-          <button class="choice" onclick="choose(this,'presentation','Ramo')">💐 Ramo</button>
-          <button class="choice" onclick="choose(this,'presentation','Individual')">🌹 Individual</button>
+        <hr class="filter-divider">
+
+        <button class="filter-btn" style="color:var(--pink);font-weight:600"
+          onclick="filterProducts('all', null); filterPresentation(null, null)">
+          ✕ Limpiar filtros
+        </button>
+      </aside>
+
+      <!-- Grid de productos -->
+      <main>
+        <div class="results-bar">
+          <div class="results-count">Mostrando <span id="resultText">...</span> productos</div>
+          <select class="sort-select" id="sortSelect" onchange="sortProducts()">
+            <option value="popular">Más populares</option>
+            <option value="low">Precio: menor a mayor</option>
+            <option value="high">Precio: mayor a menor</option>
+            <option value="name">Nombre A-Z</option>
+          </select>
         </div>
-      </div>
+        <div id="productGrid" class="products-grid"></div>
+      </main>
+    </div>
+  </section>
 
-      <!-- Color de la caja -->
-      <div class="option-group">
-        <div class="option-title">🎀 Color de la caja / decoración</div>
-        <div class="choices">
-          <button class="choice selected" onclick="choose(this,'boxColor','Negra')">⚫ Negra</button>
-          <button class="choice" onclick="choose(this,'boxColor','Blanca')">⚪ Blanca</button>
-          <button class="choice" onclick="choose(this,'boxColor','Rosada')">🩷 Rosada</button>
-          <button class="choice" onclick="choose(this,'boxColor','Roja')">🔴 Roja</button>
-        </div>
-      </div>
+  <!-- ── Carrito flotante ───────────────────────────── -->
+  <div class="cart-float" id="cartFloat" onclick="toggleCart()">
+    🛒 Carrito
+    <span class="cart-count" id="cartCount">0</span>
+  </div>
 
-      <!-- Extras -->
-      <div class="option-group">
-        <div class="option-title">🍫 Extras</div>
-        <div class="choices">
-          <button class="choice selected" onclick="choose(this,'extra','Sin extra')">Sin extra</button>
-          <button class="choice" onclick="choose(this,'extra','Chocolates')">🍫 Chocolates +$15.000</button>
-          <button class="choice" onclick="choose(this,'extra','Peluche')">🧸 Peluche +$25.000</button>
-          <button class="choice" onclick="choose(this,'extra','Chocolates + peluche')">🎁 Combo +$35.000</button>
-        </div>
+  <!-- ── Cart Drawer ───────────────────────────────── -->
+  <div class="cart-drawer" id="cartDrawer">
+    <div class="cart-header">
+      <h3>🛒 Tu carrito</h3>
+      <button class="cart-close" onclick="closeCartDrawer()">✕</button>
+    </div>
+    <div class="cart-items" id="cartItems"></div>
+    <div class="cart-footer">
+      <div class="cart-total">
+        <span>Total</span>
+        <span class="cart-total-amount">$<span id="cartTotal">0</span></span>
       </div>
-
-      <!-- Mensaje personalizado -->
-      <div class="option-group">
-        <div class="option-title">💌 Mensaje personalizado</div>
-        <textarea id="customMessage" class="message-area" placeholder="Escribe aquí el mensaje que quieres incluir en el detalle..."></textarea>
-      </div>
-
-      <!-- Cantidad -->
-      <div class="option-group">
-        <div class="option-title">Cantidad de detalles</div>
-        <div class="qty-control">
-          <button class="qty-btn" onclick="changeQty(-1)">−</button>
-          <span class="qty-value" id="modalQty">1</span>
-          <button class="qty-btn" onclick="changeQty(1)">+</button>
-        </div>
-      </div>
-
-      <!-- Resumen -->
-      <div class="order-summary">
-        <b>Tu detalle:</b><br>
-        <span id="summaryText">Rosa eterna · Rojo · Caja · Negra · Sin extra</span>
-      </div>
-
-      <button class="btn btn-primary btn-full" style="margin-top:14px" onclick="addCustomized()">
-        🛒 Agregar al carrito
+      <button class="btn btn-primary btn-full" onclick="sendWhatsApp()">
+        📲 Pedir por WhatsApp
       </button>
     </div>
   </div>
-</div>
 
-<!-- ── Footer ────────────────────────────────────── -->
-<footer id="contacto">
-  <div class="footer-logo">Rosas Eternas 🌹</div>
-  <div class="footer-tagline">Detalles únicos para momentos que no se olvidan</div>
-  <div class="footer-links">
-    <a href="index.html">Inicio</a>
-    <a href="catalogo.html">Catálogo</a>
-    <a href="admin.html">Admin</a>
-    <a href="https://wa.me/573001234567" target="_blank">WhatsApp</a>
+  <!-- ── Modal de producto ─────────────────────────── -->
+  <div id="productModal" class="product-modal">
+    <div class="modal-card">
+
+      <!-- Visual -->
+      <div class="modal-visual">
+        <span id="modalVisualIcon">🌹</span>
+      </div>
+
+      <!-- Contenido -->
+      <div class="modal-content">
+        <button class="modal-close" onclick="closeProduct()">✕</button>
+        <div class="eyebrow">Personaliza tu detalle</div>
+        <h2 class="modal-name" id="modalName">Rosa eterna</h2>
+        <div class="modal-price">
+          $<span id="modalTotalPrice">0</span>
+          <small style="font-size:13px;font-weight:400;color:var(--muted)" id="modalBasePrice"></small>
+        </div>
+
+        <!-- Color de la rosa -->
+        <div class="option-group">
+          <div class="option-title">🌹 Color de la rosa</div>
+          <div class="choices" id="roseColors">
+            <button class="choice selected" onclick="choose(this,'roseColor','Rojo')">🔴 Rojo</button>
+            <button class="choice" onclick="choose(this,'roseColor','Rosado')">🩷 Rosado</button>
+            <button class="choice" onclick="choose(this,'roseColor','Blanco')">⚪ Blanco</button>
+            <button class="choice" onclick="choose(this,'roseColor','Azul')">🔵 Azul</button>
+            <button class="choice" onclick="choose(this,'roseColor','Arcoíris')">🌈 Arcoíris</button>
+          </div>
+        </div>
+
+        <!-- Presentación -->
+        <div class="option-group">
+          <div class="option-title">📦 Presentación</div>
+          <div class="choices" id="presentations">
+            <button class="choice selected" onclick="choose(this,'presentation','Caja')">📦 Caja</button>
+            <button class="choice" onclick="choose(this,'presentation','Cúpula')">✨ Cúpula</button>
+            <button class="choice" onclick="choose(this,'presentation','Ramo')">💐 Ramo</button>
+            <button class="choice" onclick="choose(this,'presentation','Individual')">🌹 Individual</button>
+          </div>
+        </div>
+
+        <!-- Color de la caja -->
+        <div class="option-group">
+          <div class="option-title">🎀 Color de la caja / decoración</div>
+          <div class="choices">
+            <button class="choice selected" onclick="choose(this,'boxColor','Negra')">⚫ Negra</button>
+            <button class="choice" onclick="choose(this,'boxColor','Blanca')">⚪ Blanca</button>
+            <button class="choice" onclick="choose(this,'boxColor','Rosada')">🩷 Rosada</button>
+            <button class="choice" onclick="choose(this,'boxColor','Roja')">🔴 Roja</button>
+          </div>
+        </div>
+
+        <!-- Extras -->
+        <div class="option-group">
+          <div class="option-title">🍫 Extras</div>
+          <div class="choices">
+            <button class="choice selected" onclick="choose(this,'extra','Sin extra')">Sin extra</button>
+            <button class="choice" onclick="choose(this,'extra','Chocolates')">🍫 Chocolates +$15.000</button>
+            <button class="choice" onclick="choose(this,'extra','Peluche')">🧸 Peluche +$25.000</button>
+            <button class="choice" onclick="choose(this,'extra','Chocolates + peluche')">🎁 Combo +$35.000</button>
+          </div>
+        </div>
+
+        <!-- Mensaje personalizado -->
+        <div class="option-group">
+          <div class="option-title">💌 Mensaje personalizado</div>
+          <textarea id="customMessage" class="message-area"
+            placeholder="Escribe aquí el mensaje que quieres incluir en el detalle..."></textarea>
+        </div>
+
+        <!-- Cantidad -->
+        <div class="option-group">
+          <div class="option-title">Cantidad de detalles</div>
+          <div class="qty-control">
+            <button class="qty-btn" onclick="changeQty(-1)">−</button>
+            <span class="qty-value" id="modalQty">1</span>
+            <button class="qty-btn" onclick="changeQty(1)">+</button>
+          </div>
+        </div>
+
+        <!-- Resumen -->
+        <div class="order-summary">
+          <b>Tu detalle:</b><br>
+          <span id="summaryText">Rosa eterna · Rojo · Caja · Negra · Sin extra</span>
+        </div>
+
+        <button class="btn btn-primary btn-full" style="margin-top:14px" onclick="addCustomized()">
+          🛒 Agregar al carrito
+        </button>
+      </div>
+    </div>
   </div>
-  <p style="color:#b09aa8;font-size:14px">📱 +57 300 123 4567 &nbsp;·&nbsp; 📍 Tu ciudad</p>
-  <div class="footer-copy">© 2026 Rosas Eternas & Detalles. Todos los derechos reservados.</div>
-</footer>
 
-<!-- ── Scripts ───────────────────────────────────── -->
-<script src="js/api.js"></script>
-<script src="js/cart.js"></script>
-<script src="js/catalog.js"></script>
-<script src="js/modal.js"></script>
-<script>
-  // Nav scroll effect
-  const nav = document.getElementById('mainNav');
-  window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 10));
+  <!-- ── Footer ────────────────────────────────────── -->
+  <footer id="contacto">
+    <div class="footer-logo">Rosas Eternas 🌹</div>
+    <div class="footer-tagline">Detalles únicos para momentos que no se olvidan</div>
+    <div class="footer-links">
+      <a href="index.html">Inicio</a>
+      <a href="catalogo.html">Catálogo</a>
+      <a href="admin.html" id="adminLinkFooter" style="display:none">Admin</a>
+      <a href="https://wa.me/573001234567" target="_blank">WhatsApp</a>
+    </div>
+    <p style="color:#b09aa8;font-size:14px">📱 +57 300 123 4567 &nbsp;·&nbsp; 📍 Tu ciudad</p>
+    <div class="footer-copy">© 2026 Rosas Eternas & Detalles. Todos los derechos reservados.</div>
+  </footer>
 
-  // Leer parámetros de URL (desde index.html categorías)
-  const params = new URLSearchParams(window.location.search);
-  const urlQty = params.get('qty');
-  const urlPres = params.get('pres');
+  <!-- ── Scripts ───────────────────────────────────── -->
+  <script src="js/api.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/catalog.js"></script>
+  <script src="js/modal.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    // Nav scroll effect
+    const nav = document.getElementById('mainNav');
+    window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 10));
 
-  // Inicializar catálogo
-  document.addEventListener('DOMContentLoaded', async () => {
-    await initCatalog();
+    // Leer parámetros de URL (desde index.html categorías)
+    const params = new URLSearchParams(window.location.search);
+    const urlQty = params.get('qty');
+    const urlPres = params.get('pres');
+    const urlCategory = params.get('category');
 
-    if (urlQty) {
-      const tab = document.querySelector(`.tab[data-qty="${urlQty}"]`);
-      filterProducts(urlQty, tab);
-    } else if (urlPres) {
-      filterPresentation(urlPres, null);
-    }
-  });
-</script>
+    // Inicializar catálogo
+    document.addEventListener('DOMContentLoaded', async () => {
+      // Mostrar botones según estado de autenticación
+      const role = localStorage.getItem('role');
+      const token = localStorage.getItem('token');
+
+      if (role === 'admin') {
+        const topBtn = document.getElementById('adminBtnTop');
+        const footerLink = document.getElementById('adminLinkFooter');
+        if (topBtn) topBtn.style.display = 'inline-flex';
+        if (footerLink) footerLink.style.display = 'inline-block';
+      }
+
+      if (token) {
+        const loginLink = document.getElementById('loginNavLink');
+        const logoutLink = document.getElementById('logoutNavLink');
+        if (loginLink) loginLink.style.display = 'none';
+        if (logoutLink) logoutLink.style.display = 'inline-block';
+      }
+
+      await initCatalog();
+
+      if (urlCategory) {
+        const btn = document.querySelector(`.filter-btn[data-cat="${urlCategory}"]`);
+        filterCategory(urlCategory, btn);
+      } else if (urlQty) {
+        const tab = document.querySelector(`.tab[data-qty="${urlQty}"]`);
+        filterProducts(urlQty, tab);
+      } else if (urlPres) {
+        filterPresentation(urlPres, null);
+      }
+    });
+  </script>
 
 </body>
+
 </html>

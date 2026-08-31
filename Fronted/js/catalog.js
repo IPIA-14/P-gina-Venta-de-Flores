@@ -28,6 +28,8 @@ const DEFAULT_PRODUCTS = [
 let allProducts = [];
 let currentFilter = 'all';
 let currentPresentation = null;
+let currentCategory = null;
+let currentColor = null;
 
 /* ── Inicializar catálogo ──────────────────────── */
 async function initCatalog() {
@@ -59,7 +61,9 @@ function showLoadingSkeleton() {
 function renderProducts() {
   let list = allProducts.filter(p =>
     (currentFilter === 'all' || p.qty === currentFilter) &&
-    (!currentPresentation || p.presentation === currentPresentation)
+    (!currentPresentation || p.presentation === currentPresentation) &&
+    (!currentCategory || p.category === currentCategory)
+    // currentColor no filtra porque todos los productos se pueden personalizar en cualquier color
   );
 
   const sortEl = document.getElementById('sortSelect');
@@ -97,7 +101,7 @@ function renderProducts() {
         <div class="card-desc">${p.desc}</div>
         <div class="card-price">${money(p.price)}</div>
         <button class="card-add" onclick="openProduct(${p.id})">
-          🛒 Personalizar y agregar
+          🛒 Tomar Pedido
         </button>
       </div>
     </div>
@@ -108,10 +112,14 @@ function renderProducts() {
 function filterProducts(qty, btn) {
   currentFilter = qty;
   currentPresentation = null;
+  currentCategory = null;
 
   // Actualizar tabs activos
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   if (btn) btn.classList.add('active');
+
+  // Limpiar otros botones de categoría/presentación
+  document.querySelectorAll('.filter-btn[data-cat], .filter-btn[data-pres]').forEach(b => b.classList.remove('active'));
 
   // Actualizar botones sidebar
   document.querySelectorAll('.filter-btn[data-qty]').forEach(b => {
@@ -124,16 +132,56 @@ function filterProducts(qty, btn) {
 function filterPresentation(pres, btn) {
   currentPresentation = currentPresentation === pres ? null : pres;
   currentFilter = 'all';
+  currentCategory = null;
 
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   const allTab = document.querySelector('.tab[data-qty="all"]');
-  if (allTab) allTab.classList.add('active');
+  if (allTab && !currentPresentation) allTab.classList.add('active');
+
+  document.querySelectorAll('.filter-btn[data-cat], .filter-btn[data-qty]').forEach(b => b.classList.remove('active'));
 
   document.querySelectorAll('.filter-btn[data-pres]').forEach(b => {
     b.classList.toggle('active', b.dataset.pres === currentPresentation);
   });
 
   renderProducts();
+}
+
+function filterCategory(cat, btn) {
+  currentCategory = currentCategory === cat ? null : cat;
+  currentFilter = 'all';
+  currentPresentation = null;
+
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  const allTab = document.querySelector('.tab[data-qty="all"]');
+  if (allTab && !currentCategory) allTab.classList.add('active');
+
+  // Limpiar otros filtros en la barra lateral
+  document.querySelectorAll('.filter-btn[data-pres], .filter-btn[data-qty]').forEach(b => b.classList.remove('active'));
+
+  // Actualizar botones de categoría
+  document.querySelectorAll('.filter-btn[data-cat]').forEach(b => {
+    b.classList.toggle('active', b.dataset.cat === currentCategory);
+  });
+
+  renderProducts();
+}
+
+function filterColor(color, btn) {
+  currentColor = currentColor === color ? null : color;
+  
+  // Actualizar UI de color dots
+  document.querySelectorAll('.color-dot').forEach(d => {
+    d.style.transform = 'scale(1)';
+    d.style.boxShadow = 'none';
+  });
+  
+  if (currentColor && btn) {
+    btn.style.transform = 'scale(1.2)';
+    btn.style.boxShadow = '0 0 0 2px var(--bg), 0 0 0 4px var(--pink)';
+  }
+  
+  // No llamamos renderProducts porque todos los productos están disponibles en todos los colores
 }
 
 function sortProducts() { renderProducts(); }

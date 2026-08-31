@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const fs = require('fs');
 const path = require('path');
+const { authenticate } = require('../middleware/authenticate');
 
 const PRODUCTS_FILE = path.join(__dirname, '../data/products.json');
 
@@ -35,8 +36,11 @@ router.get('/:id', (req, res) => {
   }
 });
 
-// PUT /api/products/:id — actualizar precio
-router.put('/:id', (req, res) => {
+// PUT /api/products/:id — actualizar precio (admin only)
+router.put('/:id', authenticate, (req, res) => {
+  if (req.user.role !== 'admin') {
+    return res.status(403).json({ error: 'Acceso denegado' });
+  }
   try {
     const products = readProducts();
     const idx = products.findIndex(p => p.id === parseInt(req.params.id));

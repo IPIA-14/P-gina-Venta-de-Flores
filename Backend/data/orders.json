@@ -1,1 +1,39 @@
-[]
+[
+  {
+    "id": 1788204874248,
+    "createdAt": "2026-08-31T19:34:34.248Z",
+    "status": "pendiente",
+    "items": [
+      {
+        "id": 1788204871910,
+        "productId": 19,
+        "name": "50+ Rosas eternas",
+        "icon": "🌹",
+        "price": 1035000,
+        "customization": {
+          "roseColor": "Blanco",
+          "presentation": "Cúpula",
+          "boxColor": "Rosada",
+          "extra": "Chocolates + peluche",
+          "message": "ghkt"
+        }
+      },
+      {
+        "id": 1788204871911,
+        "productId": 19,
+        "name": "50+ Rosas eternas",
+        "icon": "🌹",
+        "price": 1035000,
+        "customization": {
+          "roseColor": "Blanco",
+          "presentation": "Cúpula",
+          "boxColor": "Rosada",
+          "extra": "Chocolates + peluche",
+          "message": "ghkt"
+        }
+      }
+    ],
+    "total": 2070000,
+    "message": "Hola! Quiero realizar un pedido de Rosas Eternas 🌹\n\n• 50+ Rosas eternas - $1.035.000\n   🌹 Blanco | 📦 Cúpula | 🎀 Rosada | 🎁 Chocolates + peluche\n   💌 Mensaje: \"ghkt\"\n• 50+ Rosas eternas - $1.035.000\n   🌹 Blanco | 📦 Cúpula | 🎀 Rosada | 🎁 Chocolates + peluche\n   💌 Mensaje: \"ghkt\"\n\n💰 *Total: $2.070.000*\n\n¿Pueden confirmar disponibilidad?"
+  }
+]

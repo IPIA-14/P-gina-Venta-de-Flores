@@ -15,7 +15,10 @@
 <!-- ── Admin Nav ────────────────────────────────── -->
 <nav class="admin-nav">
   <div class="admin-nav-title">⚙️ Panel de Administración</div>
-  <a href="catalogo.html" class="btn btn-ghost btn-sm">← Ver tienda</a>
+  <div>
+    <a href="catalogo.html" class="btn btn-ghost btn-sm">← Ver tienda</a>
+    <button class="btn btn-outline btn-sm" style="margin-left:8px; border-color:var(--danger); color:var(--danger)" onclick="logout()">Cerrar sesión</button>
+  </div>
 </nav>
 
 <!-- ── Admin Body ───────────────────────────────── -->
@@ -55,6 +58,7 @@
 
 <!-- ── Scripts ───────────────────────────────────── -->
 <script src="js/api.js"></script>
+<script src="js/auth.js"></script>
 <script src="js/admin.js"></script>
 
 </body>

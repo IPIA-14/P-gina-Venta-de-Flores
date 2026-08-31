@@ -6,6 +6,15 @@
 const API_BASE = 'http://localhost:3000/api';
 
 /**
+ * Obtiene los headers de autenticación si existe un token
+ * @returns {Object}
+ */
+function getAuthHeaders() {
+  const token = localStorage.getItem('token');
+  return token ? { 'Authorization': `Bearer ${token}` } : {};
+}
+
+/**
  * Obtiene todos los productos desde el backend.
  * @returns {Promise<Array>}
  */
@@ -45,7 +54,10 @@ async function fetchProductById(id) {
 async function updateProduct(id, data) {
   const res = await fetch(`${API_BASE}/products/${id}`, {
     method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 
+      'Content-Type': 'application/json',
+      ...getAuthHeaders()
+    },
     body: JSON.stringify(data)
   });
   if (!res.ok) throw new Error('Error actualizando producto');
@@ -78,8 +90,17 @@ async function submitOrder(orderData) {
  */
 async function fetchOrders() {
   try {
-    const res = await fetch(`${API_BASE}/orders`);
-    if (!res.ok) throw new Error('Error cargando pedidos');
+    const res = await fetch(`${API_BASE}/orders`, {
+      headers: {
+        ...getAuthHeaders()
+      }
+    });
+    if (!res.ok) {
+      if (res.status === 401 || res.status === 403) {
+        window.location.href = 'login.html'; // Redirigir si no está autorizado
+      }
+      throw new Error('Error cargando pedidos');
+    }
     return await res.json();
   } catch (err) {
     console.error('Error fetchOrders:', err);
@@ -95,9 +116,17 @@ async function fetchOrders() {
 async function updateOrderStatus(id, status) {
   const res = await fetch(`${API_BASE}/orders/${id}/status`, {
     method: 'PATCH',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 
+      'Content-Type': 'application/json',
+      ...getAuthHeaders()
+    },
     body: JSON.stringify({ status })
   });
-  if (!res.ok) throw new Error('Error actualizando estado');
+  if (!res.ok) {
+      if (res.status === 401 || res.status === 403) {
+        window.location.href = 'login.html';
+      }
+      throw new Error('Error actualizando estado');
+  }
   return await res.json();
 }

@@ -21,40 +21,38 @@ async function loadAdminProducts() {
   }
 
   container.innerHTML = products.map(p => `
-    <div class="admin-product-row" id="row-${p.id}">
-      <div class="admin-product-info">
-        <b>${p.icon} ${p.name}</b>
+    <div class="admin-product-row" id="row-${p.id}" style="flex-wrap:wrap; gap:10px">
+      <div class="admin-product-info" style="flex:1; min-width:200px">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px">
+          <span>${p.icon}</span>
+          <input class="admin-input" id="name-${p.id}" type="text" value="${p.name}" style="flex:1; padding:4px; font-weight:bold" placeholder="Nombre">
+        </div>
+        <textarea class="admin-input" id="desc-${p.id}" style="width:100%; height:40px; padding:4px; font-size:12px; resize:none" placeholder="Descripción">${p.desc}</textarea>
         <small>${p.qty} ${p.qty === '1' ? 'rosa' : 'rosas'} · ${p.presentation}</small>
       </div>
-      <input
-        class="admin-input"
-        id="price-${p.id}"
-        type="number"
-        min="0"
-        step="1000"
-        value="${p.price}"
-        placeholder="Precio"
-      >
-      <button
-        class="save-btn"
-        id="save-${p.id}"
-        onclick="savePrice(${p.id})"
-      >
-        Guardar
-      </button>
+      <div style="display:flex; align-items:center; gap:8px">
+        <input class="admin-input" id="price-${p.id}" type="number" min="0" step="1000" value="${p.price}" placeholder="Precio" style="width:100px">
+        <button class="save-btn" id="save-${p.id}" onclick="saveProduct(${p.id})">Guardar</button>
+      </div>
     </div>
   `).join('');
 }
 
-/* ── Guardar precio ────────────────────────────── */
-async function savePrice(id) {
-  const input = document.getElementById(`price-${id}`);
+/* ── Guardar Producto ────────────────────────────── */
+async function saveProduct(id) {
+  const inputPrice = document.getElementById(`price-${id}`);
+  const inputName = document.getElementById(`name-${id}`);
+  const inputDesc = document.getElementById(`desc-${id}`);
   const btn = document.getElementById(`save-${id}`);
-  if (!input) return;
 
-  const price = Number(input.value);
-  if (isNaN(price) || price < 0) {
-    alert('Precio inválido');
+  if (!inputPrice || !inputName || !inputDesc) return;
+
+  const price = Number(inputPrice.value);
+  const name = inputName.value.trim();
+  const desc = inputDesc.value.trim();
+
+  if (isNaN(price) || price < 0 || !name) {
+    alert('Precio o nombre inválidos');
     return;
   }
 
@@ -62,7 +60,7 @@ async function savePrice(id) {
   btn.disabled = true;
 
   try {
-    await updateProduct(id, { price });
+    await updateProduct(id, { price, name, desc });
     btn.textContent = '✓ Guardado';
     btn.classList.add('saved');
     setTimeout(() => {
@@ -98,8 +96,8 @@ async function loadAdminOrders() {
 
   container.innerHTML = orders.map(order => {
     const date = new Date(order.createdAt);
-    const dateStr = date.toLocaleDateString('es-CO', { day:'2-digit', month:'short', year:'numeric' });
-    const timeStr = date.toLocaleTimeString('es-CO', { hour:'2-digit', minute:'2-digit' });
+    const dateStr = date.toLocaleDateString('es-CO', { day: '2-digit', month: 'short', year: 'numeric' });
+    const timeStr = date.toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' });
     const items = order.items || [];
     const total = order.total || items.reduce((s, x) => s + x.price, 0);
 
@@ -116,9 +114,9 @@ async function loadAdminOrders() {
               onchange="changeOrderStatus(${order.id}, this.value)"
               style="margin-top:6px;display:block;font-size:12px;padding:4px 8px;border:1px solid #ddd;border-radius:6px;cursor:pointer"
             >
-              <option value="pendiente" ${order.status==='pendiente'?'selected':''}>Pendiente</option>
-              <option value="confirmado" ${order.status==='confirmado'?'selected':''}>Confirmado</option>
-              <option value="entregado" ${order.status==='entregado'?'selected':''}>Entregado</option>
+              <option value="pendiente" ${order.status === 'pendiente' ? 'selected' : ''}>Pendiente</option>
+              <option value="confirmado" ${order.status === 'confirmado' ? 'selected' : ''}>Confirmado</option>
+              <option value="entregado" ${order.status === 'entregado' ? 'selected' : ''}>Entregado</option>
             </select>
           </div>
         </div>
