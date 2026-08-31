@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel Admin — Rosas Eternas</title>
+  <meta name="robots" content="noindex, nofollow">
+
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/pages.css">
+</head>
+<body>
+
+<!-- ── Admin Nav ────────────────────────────────── -->
+<nav class="admin-nav">
+  <div class="admin-nav-title">⚙️ Panel de Administración</div>
+  <a href="catalogo.html" class="btn btn-ghost btn-sm">← Ver tienda</a>
+</nav>
+
+<!-- ── Admin Body ───────────────────────────────── -->
+<div class="admin-layout">
+
+  <!-- Columna 1: Productos -->
+  <div>
+    <h2 class="admin-section-title">🌹 Gestión de Productos</h2>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:20px">
+      Edita los precios y guarda cada uno individualmente. Los cambios se guardan en el servidor.
+    </p>
+    <div id="adminProducts">
+      <!-- Cargado por admin.js -->
+    </div>
+  </div>
+
+  <!-- Columna 2: Pedidos -->
+  <div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <h2 class="admin-section-title" style="margin-bottom:0">📋 Pedidos Recibidos</h2>
+      <button class="btn btn-outline btn-sm" onclick="loadAdminOrders()">🔄 Actualizar</button>
+    </div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:20px">
+      Los pedidos se registran cuando el cliente hace clic en "Pedir por WhatsApp".
+    </p>
+    <div id="adminOrders">
+      <!-- Cargado por admin.js -->
+    </div>
+  </div>
+
+</div>
+
+<!-- ── Footer Admin ──────────────────────────────── -->
+<footer style="background:var(--dark-2);color:var(--white);text-align:center;padding:20px;font-size:13px;color:#6b5565">
+  Panel Admin — Rosas Eternas &amp; Detalles
+</footer>
+
+<!-- ── Scripts ───────────────────────────────────── -->
+<script src="js/api.js"></script>
+<script src="js/admin.js"></script>
+
+</body>
+</html>
