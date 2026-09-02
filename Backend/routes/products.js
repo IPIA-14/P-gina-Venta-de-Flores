@@ -114,6 +114,30 @@ router.put('/:id', authenticate, async (req, res) => {
   }
 });
 
+// DELETE /api/products/:id — eliminar producto (admin only)
+router.delete('/:id', authenticate, async (req, res) => {
+  if (req.user.role !== 'admin') return res.status(403).json({ error: 'Acceso denegado' });
+  try {
+    const db = await getDb();
+    const product = await db.get('SELECT images FROM products WHERE id = ?', [req.params.id]);
+    if (!product) return res.status(404).json({ error: 'Producto no encontrado' });
+
+    // Borrar imágenes físicas del servidor
+    const images = product.images ? JSON.parse(product.images) : [];
+    for (const imgUrl of images) {
+      const filename = path.basename(imgUrl);
+      const filePath = path.join(UPLOADS_DIR, filename);
+      if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+    }
+
+    await db.run('DELETE FROM products WHERE id = ?', [req.params.id]);
+    res.json({ success: true, message: 'Producto eliminado' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error eliminando producto' });
+  }
+});
+
 // POST /api/products/:id/images — subir imagen (admin only)
 router.post('/:id/images', authenticate, upload.single('image'), async (req, res) => {
   if (req.user.role !== 'admin') return res.status(403).json({ error: 'Acceso denegado' });

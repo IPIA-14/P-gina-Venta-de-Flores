@@ -83,6 +83,20 @@ async function updateProduct(id, data) {
 }
 
 /**
+ * Elimina un producto por su ID.
+ * @param {number} id
+ * @returns {Promise<Object>}
+ */
+async function deleteProduct(id) {
+  const res = await fetch(`${API_BASE}/products/${id}`, {
+    method: 'DELETE',
+    headers: { ...getAuthHeaders() }
+  });
+  if (!res.ok) throw new Error('Error eliminando producto');
+  return await res.json();
+}
+
+/**
  * Guarda un nuevo pedido en el backend.
  * @param {Object} orderData — { items, total, whatsappText }
  * @returns {Promise<Object>}

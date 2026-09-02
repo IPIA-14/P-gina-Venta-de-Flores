@@ -66,9 +66,12 @@ function openCreateModal() {
   document.getElementById('editCategory').value = 'eternas';
   document.getElementById('editPresentation').value = 'caja';
   
-  // Ocultar campo de adjuntar imágenes en la creación inicial (se habilitará tras crear)
+  // Ocultar campo de adjuntar imágenes en la creación inicial
   const imagesFieldGroup = document.getElementById('editImagesGrid').parentElement;
   imagesFieldGroup.style.display = 'none';
+
+  // Ocultar botón de eliminar en modo creación
+  document.getElementById('deleteProductBtn').style.display = 'none';
 
   document.getElementById('editModal').classList.add('open');
 }
@@ -91,6 +94,9 @@ function openEditModal(id) {
   const imagesFieldGroup = document.getElementById('editImagesGrid').parentElement;
   imagesFieldGroup.style.display = 'block';
 
+  // Mostrar botón de eliminar en modo edición
+  document.getElementById('deleteProductBtn').style.display = 'inline-flex';
+
   renderImagesGrid(p.images || []);
 
   document.getElementById('editModal').classList.add('open');
@@ -102,11 +108,16 @@ function renderImagesGrid(images) {
   grid.innerHTML = images.map(url => `
     <div class="img-thumb">
       <img src="${url}" alt="Imagen producto" loading="lazy">
-      <button class="img-thumb-remove" onclick="removeImage(${id}, '${url}')" title="Eliminar">×</button>
+      <button class="img-thumb-remove" data-url="${url}" data-id="${id}" title="Eliminar">×</button>
     </div>
   `).join('') + `
     <button class="img-add-btn" onclick="document.getElementById('imageFileInput').click()" title="Agregar imagen">+</button>
   `;
+
+  // Event delegation para botones X (evita problemas con URLs con caracteres especiales)
+  grid.querySelectorAll('.img-thumb-remove').forEach(btn => {
+    btn.addEventListener('click', () => removeImage(Number(btn.dataset.id), btn.dataset.url));
+  });
 }
 
 /* ── Imágenes ────────────────────────────────────── */
@@ -196,6 +207,41 @@ function handleOverlayClick(e) {
   if (e.target.id === 'editModal') closeEditModal();
 }
 
+/* ── Eliminar Producto ─────────────────────────── */
+async function deleteProductHandler() {
+  console.log('deleteProductHandler() called');
+  const id = Number(document.getElementById('editProductId').value);
+  console.log('Product ID:', id);
+  if (!id) { console.log('No ID found, returning'); return; }
+
+  const p = allProductsCache.find(x => x.id === id);
+  const name = p ? p.name : `Producto #${id}`;
+
+  // Doble confirmación
+  if (!confirm(`⚠️ ¿Eliminar "${name}"?\n\nEsta acción es permanente y no se puede deshacer.`)) return;
+  if (!confirm(`¿Estás totalmente seguro? Se eliminará "${name}" y todas sus imágenes.`)) return;
+
+  const deleteBtn = document.getElementById('deleteProductBtn');
+  deleteBtn.textContent = 'Eliminando...';
+  deleteBtn.disabled = true;
+
+  try {
+    console.log('Calling deleteProduct API...');
+    const result = await deleteProduct(id);
+    console.log('Delete result:', result);
+    closeEditModal();
+    const card = document.getElementById(`card-${id}`);
+    if (card) card.remove();
+    allProductsCache = allProductsCache.filter(x => x.id !== id);
+  } catch (err) {
+    console.error('DELETE ERROR:', err);
+    alert('Error al eliminar: ' + err.message);
+  } finally {
+    deleteBtn.textContent = '🗑️ Eliminar';
+    deleteBtn.disabled = false;
+  }
+}
+
 async function submitEditProduct() {
   const idStr = document.getElementById('editProductId').value;
   const isCreating = !idStr; // Si no hay ID, estamos creando
@@ -279,8 +325,8 @@ async function loadAdminOrders() {
           <div>
             <span class="order-status ${order.status}">${order.status}</span>
             <select
+              class="order-status-select"
               onchange="changeOrderStatus(${order.id}, this.value)"
-              style="margin-top:6px;display:block;font-size:12px;padding:4px 8px;border:1px solid #ddd;border-radius:6px;cursor:pointer"
             >
               <option value="pendiente" ${order.status === 'pendiente' ? 'selected' : ''}>Pendiente</option>
               <option value="confirmado" ${order.status === 'confirmado' ? 'selected' : ''}>Confirmado</option>

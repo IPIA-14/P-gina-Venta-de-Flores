@@ -226,11 +226,14 @@
   background: var(--white);
   border-radius: 16px;
   width: 100%;
-  max-width: 480px;
+  max-width: 520px;
+  max-height: 90vh;
   margin: 20px;
   box-shadow: 0 24px 60px rgba(0,0,0,0.20);
   animation: modalIn 0.22s ease;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 @keyframes modalIn {
   from { opacity: 0; transform: translateY(20px) scale(0.97); }
@@ -278,7 +281,7 @@
   cursor: default;
 }
 
-.edit-modal-body { padding: 22px 24px; display: flex; flex-direction: column; gap: 16px; }
+.edit-modal-body { padding: 22px 24px; display: flex; flex-direction: column; gap: 16px; overflow-y: auto; flex: 1; }
 .edit-field-group { display: flex; flex-direction: column; gap: 6px; }
 .edit-label {
   font-size: 11px;
@@ -440,6 +443,57 @@
 .admin-nav-title { font-family: var(--font-serif); font-size: 18px; }
 
 /* ══════════════════════════════════════
+   Botón eliminar (danger)
+   ══════════════════════════════════════ */
+.btn-danger {
+  background: transparent;
+  border: 1.5px solid #e53935;
+  color: #e53935;
+  font-size: 13px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.btn-danger:hover {
+  background: #e53935;
+  color: #fff;
+}
+
+/* ══════════════════════════════════════
+   Badges de estado de pedidos mejorados
+   ══════════════════════════════════════ */
+.order-status {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+.order-status.pendiente  { background: #fff3cd; color: #856404; }
+.order-status.confirmado { background: #cfe2ff; color: #084298; }
+.order-status.entregado  { background: #d1e7dd; color: #0a3622; }
+
+.order-status-select {
+  margin-top: 6px;
+  display: block;
+  font-size: 12px;
+  padding: 5px 10px;
+  border: 1px solid #e0d4de;
+  border-radius: 8px;
+  cursor: pointer;
+  background: var(--surface, #fff);
+  color: var(--dark);
+  outline: none;
+  transition: border-color 0.2s;
+}
+.order-status-select:focus { border-color: var(--pink); }
+
    Responsive pages
    ══════════════════════════════════════ */
 @media (max-width: 900px) {

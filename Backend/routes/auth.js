@@ -3,17 +3,8 @@ const router = express.Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { getDb } = require('../db/database');
-const fs = require('fs');
-const path = require('path');
 
-// Obtener la clave secreta desde .env (misma que server.js)
-const envPath = path.join(__dirname, '../.env');
-let JWT_SECRET = 'clave_secreta_fallback';
-if (fs.existsSync(envPath)) {
-  const envFile = fs.readFileSync(envPath, 'utf8');
-  const match = envFile.match(/JWT_SECRET=(.*)/);
-  if (match) JWT_SECRET = match[1].trim();
-}
+const JWT_SECRET = process.env.JWT_SECRET || 'supersecretkey123';
 
 router.post('/login', async (req, res) => {
   const { username, password } = req.body;
