@@ -37,7 +37,8 @@ async function getDb() {
           icon TEXT,
           desc TEXT,
           category TEXT,
-          images TEXT -- JSON string array
+          images TEXT, -- JSON string array
+          is_available INTEGER DEFAULT 1
         );
 
         CREATE TABLE IF NOT EXISTS orders (
@@ -49,6 +50,14 @@ async function getDb() {
           message TEXT
         );
       `);
+
+      // Migración segura de columna si la DB ya existía
+      try {
+        await db.exec(`ALTER TABLE products ADD COLUMN is_available INTEGER DEFAULT 1;`);
+      } catch (err) {
+        // La columna ya existe, ignorar error
+      }
+
       return db;
     });
   }

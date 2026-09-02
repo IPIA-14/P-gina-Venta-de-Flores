@@ -26,10 +26,13 @@ const upload = multer({
     else cb(new Error('Solo imágenes permitidas'));
   }
 });
-
-// Parsear images de JSON string a Array de JS
+// Parsear images de JSON string a Array de JS y asegurar is_available
 const formatProduct = (p) => {
-  return { ...p, images: p.images ? JSON.parse(p.images) : [] };
+  return { 
+    ...p, 
+    images: p.images ? JSON.parse(p.images) : [],
+    is_available: p.is_available === undefined || p.is_available === null ? 1 : Number(p.is_available)
+  };
 };
 
 // GET /api/products — todos los productos
@@ -62,16 +65,18 @@ router.post('/', authenticate, async (req, res) => {
   if (req.user.role !== 'admin') return res.status(403).json({ error: 'Acceso denegado' });
   try {
     const db = await getDb();
-    const { name, desc, price, qty, presentation, category, icon } = req.body;
+    const { name, desc, price, qty, presentation, category, icon, is_available } = req.body;
     
     if (!name || price === undefined) {
       return res.status(400).json({ error: 'Nombre y precio son obligatorios' });
     }
 
+    const availableVal = is_available !== undefined ? Number(is_available) : 1;
+
     const result = await db.run(
-      `INSERT INTO products (name, desc, price, qty, presentation, category, icon, images) 
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-      [name, desc || '', Number(price), qty || '1', presentation || 'individual', category || 'eternas', icon || '🌹', '[]']
+      `INSERT INTO products (name, desc, price, qty, presentation, category, icon, images, is_available) 
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [name, desc || '', Number(price), qty || '1', presentation || 'individual', category || 'eternas', icon || '🌹', '[]', availableVal]
     );
 
     const newProduct = await db.get('SELECT * FROM products WHERE id = ?', [result.lastID]);
@@ -87,7 +92,7 @@ router.put('/:id', authenticate, async (req, res) => {
   if (req.user.role !== 'admin') return res.status(403).json({ error: 'Acceso denegado' });
   try {
     const db = await getDb();
-    const { price, name, desc, qty, presentation, category, icon } = req.body;
+    const { price, name, desc, qty, presentation, category, icon, is_available } = req.body;
     
     // Obtener valores actuales
     const current = await db.get('SELECT * FROM products WHERE id = ?', [req.params.id]);
@@ -100,10 +105,11 @@ router.put('/:id', authenticate, async (req, res) => {
     const newPresentation = presentation !== undefined ? presentation : current.presentation;
     const newCategory = category !== undefined ? category : current.category;
     const newIcon = icon !== undefined ? icon : current.icon;
+    const newAvailable = is_available !== undefined ? Number(is_available) : (current.is_available ?? 1);
 
     await db.run(
-      'UPDATE products SET price = ?, name = ?, desc = ?, qty = ?, presentation = ?, category = ?, icon = ? WHERE id = ?',
-      [newPrice, newName, newDesc, newQty, newPresentation, newCategory, newIcon, req.params.id]
+      'UPDATE products SET price = ?, name = ?, desc = ?, qty = ?, presentation = ?, category = ?, icon = ?, is_available = ? WHERE id = ?',
+      [newPrice, newName, newDesc, newQty, newPresentation, newCategory, newIcon, newAvailable, req.params.id]
     );
     
     const updated = await db.get('SELECT * FROM products WHERE id = ?', [req.params.id]);

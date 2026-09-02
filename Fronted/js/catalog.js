@@ -90,22 +90,28 @@ function renderProducts() {
     return;
   }
 
-  grid.innerHTML = list.map((p, i) => `
-    <div class="card" style="animation-delay:${i * 0.07}s">
-      <div class="card-visual">
-        <span class="card-badge">${p.qty} ${p.qty === '1' ? 'rosa' : 'rosas'}</span>
-        ${p.icon}
+  grid.innerHTML = list.map((p, i) => {
+    const isAvail = p.is_available === undefined || p.is_available === null || Number(p.is_available) === 1;
+    
+    return `
+      <div class="card ${!isAvail ? 'out-of-stock' : ''}" style="animation-delay:${i * 0.07}s">
+        <div class="card-visual">
+          <span class="card-badge">${p.qty} ${p.qty === '1' ? 'rosa' : 'rosas'}</span>
+          ${!isAvail ? '<span class="out-of-stock-badge">Agotado</span>' : ''}
+          ${p.icon}
+        </div>
+        <div class="card-body">
+          <div class="card-name">${p.name}</div>
+          <div class="card-desc">${p.desc}</div>
+          <div class="card-price">${money(p.price)}</div>
+          ${isAvail 
+            ? `<button class="card-add" onclick="openProduct(${p.id})">🛒 Personalizar & Pedir</button>`
+            : `<button class="card-add disabled" disabled>🔴 Agotado</button>`
+          }
+        </div>
       </div>
-      <div class="card-body">
-        <div class="card-name">${p.name}</div>
-        <div class="card-desc">${p.desc}</div>
-        <div class="card-price">${money(p.price)}</div>
-        <button class="card-add" onclick="openProduct(${p.id})">
-          🛒 Tomar Pedido
-        </button>
-      </div>
-    </div>
-  `).join('');
+    `;
+  }).join('');
 }
 
 /* ── Filtros ───────────────────────────────────── */

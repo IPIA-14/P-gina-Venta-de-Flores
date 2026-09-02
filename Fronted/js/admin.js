@@ -38,20 +38,27 @@ async function loadAdminProducts() {
 
   allProductsCache = products;
 
-  container.innerHTML = products.map(p => `
-    <div class="admin-product-card" id="card-${p.id}">
-      <div class="apc-icon">${p.icon}</div>
-      <div class="apc-info">
-        <div class="apc-name">${p.name}</div>
-        <div class="apc-meta">${p.qty} ${p.qty === '1' ? 'rosa' : 'rosas'} · ${p.presentation}</div>
-        <div class="apc-desc">${p.desc || 'Sin descripción'}</div>
+  container.innerHTML = products.map(p => {
+    const isAvail = p.is_available === undefined || p.is_available === null || Number(p.is_available) === 1;
+    const badge = isAvail 
+      ? '<span style="font-size:11px;padding:2px 8px;border-radius:10px;background:#e6f4ea;color:#137333;font-weight:600">🟢 Disponible</span>'
+      : '<span style="font-size:11px;padding:2px 8px;border-radius:10px;background:#fce8e6;color:#c5221f;font-weight:600">🔴 Agotado</span>';
+
+    return `
+      <div class="admin-product-card" id="card-${p.id}">
+        <div class="apc-icon">${p.icon}</div>
+        <div class="apc-info">
+          <div class="apc-name">${p.name} ${badge}</div>
+          <div class="apc-meta">${p.qty} ${p.qty === '1' ? 'rosa' : 'rosas'} · ${p.presentation}</div>
+          <div class="apc-desc">${p.desc || 'Sin descripción'}</div>
+        </div>
+        <div class="apc-right">
+          <div class="apc-price">$${money(p.price)}</div>
+          <button class="edit-btn" onclick="openEditModal(${p.id})">✏️ Editar</button>
+        </div>
       </div>
-      <div class="apc-right">
-        <div class="apc-price">$${money(p.price)}</div>
-        <button class="edit-btn" onclick="openEditModal(${p.id})">✏️ Editar</button>
-      </div>
-    </div>
-  `).join('');
+    `;
+  }).join('');
 }
 
 /* ── Modal de creación y edición ───────────────────────────── */
@@ -65,6 +72,7 @@ function openCreateModal() {
   document.getElementById('editIcon').value = '🌹';
   document.getElementById('editCategory').value = 'eternas';
   document.getElementById('editPresentation').value = 'caja';
+  if (document.getElementById('editAvailable')) document.getElementById('editAvailable').value = '1';
   
   // Ocultar campo de adjuntar imágenes en la creación inicial
   const imagesFieldGroup = document.getElementById('editImagesGrid').parentElement;
@@ -89,6 +97,9 @@ function openEditModal(id) {
   document.getElementById('editIcon').value = p.icon || '🌹';
   document.getElementById('editCategory').value = p.category || 'eternas';
   document.getElementById('editPresentation').value = p.presentation || 'caja';
+  if (document.getElementById('editAvailable')) {
+    document.getElementById('editAvailable').value = String(p.is_available ?? 1);
+  }
 
   // Mostrar el campo de imágenes en modo edición
   const imagesFieldGroup = document.getElementById('editImagesGrid').parentElement;
@@ -253,6 +264,7 @@ async function submitEditProduct() {
   const icon = document.getElementById('editIcon').value.trim();
   const category = document.getElementById('editCategory').value;
   const presentation = document.getElementById('editPresentation').value;
+  const is_available = document.getElementById('editAvailable') ? Number(document.getElementById('editAvailable').value) : 1;
 
   const saveBtn = document.getElementById('editSaveBtn');
 
@@ -265,7 +277,7 @@ async function submitEditProduct() {
   saveBtn.disabled = true;
 
   try {
-    const data = { name, desc, price, qty, icon, category, presentation };
+    const data = { name, desc, price, qty, icon, category, presentation, is_available };
 
     if (isCreating) {
       await createProduct(data);

@@ -96,7 +96,7 @@
           </select>
         </div>
       </div>
-      <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+      <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
         <div class="edit-field-group">
           <label class="edit-label">CANTIDAD DE ROSAS</label>
           <input class="admin-input" id="editQty" type="text" placeholder="Ej: 1, 3, 12, 50+">
@@ -104,6 +104,13 @@
         <div class="edit-field-group">
           <label class="edit-label">ICONO (EMOJI)</label>
           <input class="admin-input" id="editIcon" type="text" placeholder="Ej: 🌹">
+        </div>
+        <div class="edit-field-group">
+          <label class="edit-label">ESTADO</label>
+          <select class="admin-input" id="editAvailable">
+            <option value="1">🟢 Disponible</option>
+            <option value="0">🔴 Agotado</option>
+          </select>
         </div>
       </div>
       <div class="edit-field-group">

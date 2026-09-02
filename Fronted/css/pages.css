@@ -494,6 +494,36 @@
 }
 .order-status-select:focus { border-color: var(--pink); }
 
+/* ══════════════════════════════════════
+   Estilos de Producto Agotado
+   ══════════════════════════════════════ */
+.card.out-of-stock {
+  opacity: 0.78;
+}
+
+.out-of-stock-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: #ea4335;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 8px rgba(234, 67, 53, 0.3);
+}
+
+.card-add.disabled, .card-add:disabled {
+  background: #e0d8dd !important;
+  color: #887884 !important;
+  cursor: not-allowed !important;
+  border-color: #e0d8dd !important;
+  box-shadow: none !important;
+}
+
    Responsive pages
    ══════════════════════════════════════ */
 @media (max-width: 900px) {
